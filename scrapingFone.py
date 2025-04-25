@@ -29,7 +29,7 @@ url_base = "https://www.kabum.com.br/audio/fone-de-ouvido/headphone"
 driver.get(url_base)
 time.sleep(5)
 
-dic_produtos = {"marca": [], "preco": []}
+dic_produtos = {"marca": [], "preco": [], "frete": [], "parcelado": []}
 
 pagina = 1
 
@@ -51,10 +51,18 @@ while True:
             nome = produto.find_element(By.CLASS_NAME, "nameCard").text.strip()
             preco = produto.find_element(By.CLASS_NAME, "priceCard").text.strip()
 
-            print(f"{nome} - {preco}")
+            try:
+            
+                frete = produto.find_element(By.CLASS_NAME, "bg-success-500").text.strip()
+
+            except:
+                frete = "Frete Pago" 
+
+            print(f"{nome} - {preco} - {frete}")
 
             dic_produtos["marca"].append(nome)
             dic_produtos["preco"].append(preco)
+            dic_produtos["frete"].append(frete)
 
         except Exception:
             print("Erro ao coletar dados:", Exception)
@@ -65,13 +73,13 @@ while True:
         )
         if botao_proximo:
             driver.execute_script("arguments[0].scrollIntoView();", botao_proximo)
-            time.sleep(5)
+            time.sleep(10)
 
             driver.execute_script("arguments[0].click();", botao_proximo)
             print(f"Indo para a página {pagina}")
             pagina += 1
 
-            time.sleep(5)
+            time.sleep(10)
         else:
             print("Você chegou na ultima página")
             break
